@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">is_uebung03</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="inf_fak">Fakultät Informatik</string>
+    <string name="alte_mensa">Alte Mensa</string>
+    <string name="neue_mensa">Neue Mensa</string>
+    <string name="nürnberger">Nürnbeger Platz</string>
+    <string name="münchner">Münchner Platz</string>
+    <string name="auswahl">Auswahl bestätigen</string>
+</resources>
