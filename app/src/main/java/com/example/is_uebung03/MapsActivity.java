@@ -27,6 +27,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -35,6 +39,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PERMISSION_REQUEST_CODE = 200;
     private String key;
     boolean [] markerArray = new boolean[5];
+    int [] markerIntArray = new int[5];
+    List<MapLocation> Poi;
+    MarkerOptions markerOptionInfoFak = (new MarkerOptions()
+            .position(new LatLng(51.025664, 13.723250))
+            .title("Informatik Fakultät"));
+
+    MarkerOptions markerOptionAlteMensaMarker = (new MarkerOptions()
+            .position(new LatLng(51.027096, 13.726451))
+            .title("Alte Mensa"));
+
+    MarkerOptions markerOptionNeueMensaMarker = (new MarkerOptions()
+            .position(new LatLng(51.028881, 13.731928))
+            .title("Neue Mensa"));
+
+    MarkerOptions markerOptionNürnberger = (new MarkerOptions()
+            .position(new LatLng(51.032321, 13.727343))
+            .title("Nürnberger Platz"));
+
+    MarkerOptions markerOptionMünchner = (new MarkerOptions()
+            .position(new LatLng(51.030032, 13.721243))
+            .title("Münchner Platz"));
+
+    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+
+    Marker markerInfFak;
+    Marker markerAlteMensa;
+    Marker markerNeueMensa;
+    Marker markerNürnberger;
+    Marker markerMünchener;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +82,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Button button = new Button(this);
         button.setText("Click me");
         addContentView(button, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -71,15 +105,59 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         MapsActivity.super.onActivityResult(requestCode, resultCode, data);
+
         //Retrieve data in the intent
         markerArray = data.getBooleanArrayExtra("auswertung");
+        System.out.println("array0: "+ markerArray[0]);
 
-        if(markerArray[0]){
-            LatLng sydney = new LatLng(-34, 151);
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 
+
+        if (markerArray[0]) {
+            markerInfFak = mMap.addMarker(markerOptionInfoFak);
 
         }
+        else
+            if(markerInfFak!= null){
+                markerInfFak.remove();
+            }
+
+        if (markerArray[1]) {
+            markerAlteMensa = mMap.addMarker(markerOptionAlteMensaMarker);
+        }
+        else
+            if(markerAlteMensa != null){
+             markerAlteMensa.remove();
+        }
+
+        if (markerArray[2]) {
+            markerNeueMensa = mMap.addMarker(markerOptionNeueMensaMarker);
+        }
+        else
+            if(markerNeueMensa != null){
+             markerNeueMensa.remove();
+        }
+
+        if (markerArray[3]) {
+            markerNürnberger = mMap.addMarker(markerOptionNürnberger);
+        }
+        else
+            if(markerNürnberger != null){
+                markerNürnberger.remove();
+        }
+
+        if (markerArray[4]) {
+            markerMünchener = mMap.addMarker(markerOptionMünchner);
+        }
+        else
+        if(markerMünchener != null){
+            markerMünchener.remove();
+        }
+
+
+
+
+
+
 
     }
 
@@ -99,16 +177,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //requestPermissions(new String[]{ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
 
         mMap = googleMap;
+        setUpMap();
+    }
 
-        // Add a marker in Sydney and move the camera
-        System.out.println("Vor IF");
-        if(markerArray[0] == true) {
-            System.out.println("Sydney");
-            LatLng sydney = new LatLng(-34, 151);
-            Marker myMarker = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            myMarker.setPosition(sydney);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        }
+    public void setUpMap() {
+
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
 
@@ -203,5 +279,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
         String locationProvider = LocationManager.GPS_PROVIDER;
         Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+    }
+
+    public void transferArray(boolean[] array){
+        for(int i = 0; i <= array.length; i++){
+            markerIntArray[i] = array[i] ? 1 : 0;
+        }
+    }
+
+
+    public class MapLocation{
+        public MapLocation(double lt, double ln, String t){
+            lat = lt;
+            lon = ln;
+            title = t;
+        }
+        public double lat;
+        public double lon;
+        public String title;
+
     }
 }
