@@ -38,9 +38,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private static final int PERMISSION_REQUEST_CODE = 200;
     private String key;
-    boolean [] markerArray = new boolean[5];
-    int [] markerIntArray = new int[5];
-    List<MapLocation> Poi;
+    boolean[] markerArray = new boolean[5];
+    int[] markerIntArray = new int[5];
     MarkerOptions markerOptionInfoFak = (new MarkerOptions()
             .position(new LatLng(51.025664, 13.723250))
             .title("Informatik Fakultät"));
@@ -61,14 +60,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             .position(new LatLng(51.030032, 13.721243))
             .title("Münchner Platz"));
 
-    List<MarkerOptions> markerOptionsList = new ArrayList<>();
+
 
     Marker markerInfFak;
     Marker markerAlteMensa;
     Marker markerNeueMensa;
     Marker markerNürnberger;
     Marker markerMünchener;
-
 
 
     @Override
@@ -87,76 +85,87 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                Intent i=new Intent(v.getContext(),markerList.class);
+                Intent i = new Intent(v.getContext(), markerList.class);
 
                 Bundle b = new Bundle();
-                b.putBooleanArray("zustand",markerArray);
+                b.putBooleanArray("zustand", markerArray);
                 i.putExtras(b);
                 int counter = 0;
                 MapsActivity.super.startActivityForResult(i, counter);
-               }
+            }
 
         });
 
 
-
-
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         MapsActivity.super.onActivityResult(requestCode, resultCode, data);
 
         //Retrieve data in the intent
         markerArray = data.getBooleanArrayExtra("auswertung");
-        System.out.println("array0: "+ markerArray[0]);
-
+        for (int i = 0; i < markerArray.length; i++) {
+            System.out.println("Array Position: " + i + "   " + markerArray[i]);
+        }
 
 
         if (markerArray[0]) {
-            markerInfFak = mMap.addMarker(markerOptionInfoFak);
-
-        }
-        else
-            if(markerInfFak!= null){
-                markerInfFak.remove();
+            if(markerInfFak == null) {
+                markerInfFak = mMap.addMarker(markerOptionInfoFak);
+                System.out.println("Info Marker erstellt");
             }
+            markerInfFak.setVisible(true);
+
+        } else if (markerInfFak != null) {
+            markerInfFak.setVisible(false);
+            System.out.println("Info müsste verschwinden, da false");
+        }
 
         if (markerArray[1]) {
-            markerAlteMensa = mMap.addMarker(markerOptionAlteMensaMarker);
-        }
-        else
-            if(markerAlteMensa != null){
-             markerAlteMensa.remove();
+            if(markerAlteMensa == null) {
+                markerAlteMensa = mMap.addMarker(markerOptionAlteMensaMarker);
+                System.out.println("Alte Mensa Marker erstellt");
+            }
+            markerAlteMensa.setVisible(true);
+        } else if (markerAlteMensa != null) {
+            markerAlteMensa.setVisible(false);
+            System.out.println("Alte Mensa müsste verschwinden, da false");
         }
 
         if (markerArray[2]) {
-            markerNeueMensa = mMap.addMarker(markerOptionNeueMensaMarker);
-        }
-        else
-            if(markerNeueMensa != null){
-             markerNeueMensa.remove();
+            if(markerNeueMensa == null) {
+                markerNeueMensa = mMap.addMarker(markerOptionNeueMensaMarker);
+                System.out.println("Neue Mensa Marker erstellt");
+            }
+            markerNeueMensa.setVisible(true);
+
+        } else if (markerNeueMensa != null) {
+            markerNeueMensa.setVisible(false);
+            System.out.println("Neue Mensa müsste verschwinden, da false");
         }
 
         if (markerArray[3]) {
-            markerNürnberger = mMap.addMarker(markerOptionNürnberger);
-        }
-        else
-            if(markerNürnberger != null){
-                markerNürnberger.remove();
+            if(markerNürnberger == null) {
+                markerNürnberger = mMap.addMarker(markerOptionNürnberger);
+                System.out.println("Nürnberger Marker erstellt");
+            }
+            markerNürnberger.setVisible(true);
+        } else if (markerNürnberger != null) {
+            markerNürnberger.setVisible(false);
+            System.out.println("Nürnberger müsste verschwinden, da false");
         }
 
         if (markerArray[4]) {
-            markerMünchener = mMap.addMarker(markerOptionMünchner);
+            if(markerMünchener == null) {
+                markerMünchener = mMap.addMarker(markerOptionMünchner);
+                System.out.println("Münchner Marker erstellt");
+            }
+            markerMünchener.setVisible(true);
+        } else if (markerMünchener != null) {
+            markerMünchener.setVisible(false);
+            System.out.println("Münchner müsste verschwinden, da false");
         }
-        else
-        if(markerMünchener != null){
-            markerMünchener.remove();
-        }
-
-
-
-
-
 
 
     }
@@ -242,7 +251,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }*/
 
-    public void locationManager() {
+/*    public void locationManager() {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
@@ -276,27 +285,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         String locationProvider = LocationManager.GPS_PROVIDER;
         Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
     }
 
-    public void transferArray(boolean[] array){
-        for(int i = 0; i <= array.length; i++){
+    public void transferArray(boolean[] array) {
+        for (int i = 0; i <= array.length; i++) {
             markerIntArray[i] = array[i] ? 1 : 0;
         }
     }
 
 
-    public class MapLocation{
-        public MapLocation(double lt, double ln, String t){
+    public class MapLocation {
+        public MapLocation(double lt, double ln, String t) {
             lat = lt;
             lon = ln;
             title = t;
         }
+
         public double lat;
         public double lon;
         public String title;
 
-    }
+    }*/
 }
