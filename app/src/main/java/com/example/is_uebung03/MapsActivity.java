@@ -19,11 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -68,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker markerNürnberger;
     Marker markerMünchener;
 
+    List<Marker> markers = new ArrayList<Marker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (markerArray[0]) {
             if(markerInfFak == null) {
                 markerInfFak = mMap.addMarker(markerOptionInfoFak);
+                markers.add(markerInfFak);
                 System.out.println("Info Marker erstellt");
             }
             markerInfFak.setVisible(true);
@@ -125,6 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (markerArray[1]) {
             if(markerAlteMensa == null) {
                 markerAlteMensa = mMap.addMarker(markerOptionAlteMensaMarker);
+                markers.add(markerAlteMensa);
                 System.out.println("Alte Mensa Marker erstellt");
             }
             markerAlteMensa.setVisible(true);
@@ -136,6 +141,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (markerArray[2]) {
             if(markerNeueMensa == null) {
                 markerNeueMensa = mMap.addMarker(markerOptionNeueMensaMarker);
+                markers.add(markerNeueMensa);
                 System.out.println("Neue Mensa Marker erstellt");
             }
             markerNeueMensa.setVisible(true);
@@ -148,6 +154,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (markerArray[3]) {
             if(markerNürnberger == null) {
                 markerNürnberger = mMap.addMarker(markerOptionNürnberger);
+                markers.add(markerNürnberger);
                 System.out.println("Nürnberger Marker erstellt");
             }
             markerNürnberger.setVisible(true);
@@ -159,6 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (markerArray[4]) {
             if(markerMünchener == null) {
                 markerMünchener = mMap.addMarker(markerOptionMünchner);
+                markers.add(markerMünchener);
                 System.out.println("Münchner Marker erstellt");
             }
             markerMünchener.setVisible(true);
@@ -166,6 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             markerMünchener.setVisible(false);
             System.out.println("Münchner müsste verschwinden, da false");
         }
+        //showPOICentralized();
 
 
     }
@@ -196,6 +205,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
+    public void showPOICentralized(){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Marker marker : markers) {
+            builder.include(marker.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
+
+        int padding = 100;
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        mMap.animateCamera(cu);
+    }
 
     @Override
     protected void onResume() {
